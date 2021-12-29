@@ -6,24 +6,20 @@ using System.Threading;
 
 namespace SeleniumStuff
 {
-    public class UnitTest1 : IDisposable
+    public class UnitTest1 : BaseTestsSettings
     {
         IWebDriver chrome;
-        public UnitTest1()
-        {
-            chrome = new ChromeDriver();
-        }
+        
         [Fact]
-        public void Test1()
+        public void FindYurikoFromCMR()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.Name("query_string"));
             element.SendKeys("Yuriko");
             element.SendKeys(Keys.Enter);
             IWebElement element2 = chrome.FindElement(By.Name("set_id"));
             element2.SendKeys("Commander Legends");
             element2 = chrome.FindElement(By.Name("commit"));
-            //element2.SendKeys(Keys.Enter);
             element2.Click();
             string actual_url = chrome.Url;
             Assert.Equal("https://www.mtggoldfish.com/price/Commander+Legends:Foil/Yuriko+the+Tigers+Shadow-etched#paper", actual_url);
@@ -32,10 +28,9 @@ namespace SeleniumStuff
         
 
         [Fact]
-        public void Test2()
+        public void CheckLatestModernDecks()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
-            chrome.Manage().Window.Maximize();
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.Name("mformat"));
             element.Click();
             element.SendKeys("Modern");
@@ -48,22 +43,21 @@ namespace SeleniumStuff
         }
 
         [Fact]
-        public void Test3()
+        public void CheckLatestArticles()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
-            chrome.Manage().Window.Maximize();
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.CssSelector("a[href='/articles']"));
             element.Click();
-            //IWebElement element = chrome.FindElement(By.ClassName("article-tile-thumbnail"));
-            //element.Click();
+            IWebElement element2 = chrome.FindElement(By.CssSelector("a[rel='next']"));
+            element2.Click();
             string actual_url = chrome.Url;
-            Assert.Equal("https://www.mtggoldfish.com/articles", actual_url);
+            Assert.Equal("https://www.mtggoldfish.com/articles?page=2", actual_url);
         }
 
         [Fact]
-        public void Test4()
+        public void CheckStandardSinglesThatMovedInPrice()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.CssSelector("a[href='/movers/paper/standard']"));
             element.Click();
             string actual_url = chrome.Url;
@@ -71,9 +65,9 @@ namespace SeleniumStuff
         }
 
         [Fact]
-        public void Test5()
+        public void CheckKamigawaPreviews()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.CssSelector("a[href='/previews']"));
             element.Click();
             string actual_url = chrome.Url;
@@ -81,10 +75,9 @@ namespace SeleniumStuff
         }
 
         [Fact]
-        public void Test6()
+        public void CheckKamigawaSinglesPrices()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
-            chrome.Manage().Window.Maximize();
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.CssSelector("a[href='#']"));
             element.Click();
             IWebElement element2 = chrome.FindElement(By.CssSelector("a[href='/sets/Kamigawa+Neon+Dynasty']"));
@@ -94,10 +87,9 @@ namespace SeleniumStuff
         }
 
         [Fact]
-        public void Test7()
+        public void CheckStandardSinglesPrices()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
-            chrome.Manage().Window.Maximize();
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.XPath("//*[contains(text(),'Cards')]"));
             element.Click();
             IWebElement element2 = chrome.FindElement(By.CssSelector("a[href='/prices/standard']"));
@@ -108,10 +100,9 @@ namespace SeleniumStuff
 
 
         [Fact]
-        public void Test8()
+        public void CheckListOfTopWeeklyLosers()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
-            chrome.Manage().Window.Maximize();
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.CssSelector("a[href='/movers/paper/standard']"));
             element.Click();
             IWebElement element2 = chrome.FindElement(By.CssSelector("a[href='/movers-details/paper/standard/losers/wow']"));
@@ -122,22 +113,23 @@ namespace SeleniumStuff
 
 
         [Fact]
-        public void Test9()
+        public void CheckBestsellersCategoryInMerchStore()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
-            chrome.Manage().Window.Maximize();
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.XPath("//*[contains(text(),'Store')]"));
             element.Click();
+            Thread.Sleep(1000);
+            IWebElement element2 = chrome.FindElement(By.CssSelector("a[href='/collections/best-sellers']"));
+            element2.Click();
             string actual_url = chrome.Url;
-            Assert.Equal("https://mtggoldfishmerch.com/", actual_url);
+            Assert.Equal("https://mtggoldfishmerch.com/collections/best-sellers", actual_url);
             
         }
 
         [Fact]
-        public void Test10()
+        public void CheckArticleAboutUndeadUnleashDeck()
         {
-            chrome.Navigate().GoToUrl("https://www.mtggoldfish.com");
-            chrome.Manage().Window.Maximize();
+            chrome = StartDriverWithURL("https://www.mtggoldfish.com");
             IWebElement element = chrome.FindElement(By.CssSelector("a[href='/articles']"));
             element.Click();
             IWebElement element2 = chrome.FindElement(By.Name("q"));
@@ -150,9 +142,6 @@ namespace SeleniumStuff
         }
 
 
-            public void Dispose()
-            {
-                chrome.Quit();
-            }
+
         }
 }
